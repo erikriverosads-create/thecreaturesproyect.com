@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Creatures Proyect — Comunidades que generan ingresos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #0d1f2d;
+    --navy-mid: #112233;
+    --green-bright: #4ade80;
+    --green-mid: #22c55e;
+    --green-dark: #166534;
+    --gold: #e8c84a;
+    --gold-light: #f5e07a;
+    --white: #f0f4f0;
+    --gray-soft: #8fa89a;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'Syne', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.35;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem 1.5rem 4rem;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(34,197,94,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 80% at 100% 100%, rgba(34,197,94,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 0% 80%, rgba(13,31,45,0.9) 0%, transparent 60%),
+      linear-gradient(180deg, #0d1f2d 0%, #061810 60%, #0d1f2d 100%);
+    z-index: 0;
+  }
+
+  /* watermark symbol */
+  .hero-watermark {
+    position: absolute;
+    bottom: -8%;
+    right: -5%;
+    width: 55vw;
+    max-width: 600px;
+    opacity: 0.06;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .hero > * { position: relative; z-index: 1; }
+
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 3rem;
+    animation: fadeDown 0.8s ease both;
+  }
+
+  .logo-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .logo-text {
+    text-align: left;
+    line-height: 1.1;
+  }
+
+  .logo-text .the { font-family: var(--font-body); font-size: 11px; font-weight: 600; letter-spacing: 0.15em; color: var(--gray-soft); text-transform: uppercase; }
+  .logo-text .creatures { font-family: var(--font-display); font-size: 26px; color: var(--white); letter-spacing: 0.05em; }
+  .logo-text .proyect { font-family: var(--font-body); font-size: 10px; font-weight: 600; letter-spacing: 0.25em; color: var(--gold); text-transform: uppercase; }
+
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--green-bright);
+    margin-bottom: 1.5rem;
+    animation: fadeDown 0.9s 0.1s ease both;
+  }
+
+  .hero-headline {
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    margin-bottom: 1.5rem;
+    animation: fadeDown 1s 0.2s ease both;
+  }
+
+  .hero-headline span.green { color: var(--green-bright); }
+  .hero-headline span.gold { color: var(--gold); }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    color: var(--gray-soft);
+    max-width: 560px;
+    margin: 0 auto 3rem;
+    font-weight: 400;
+    animation: fadeDown 1s 0.35s ease both;
+  }
+
+  .cta-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    animation: fadeDown 1s 0.5s ease both;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--green-bright);
+    color: #061810;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 1rem 2.5rem;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.03em;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(74,222,128,0.35);
+  }
+
+  .btn-primary svg { width: 22px; height: 22px; flex-shrink: 0; }
+
+  .cta-note {
+    font-size: 0.8rem;
+    color: var(--gray-soft);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(74,222,128,0.3), transparent);
+    margin: 0;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 5rem 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--green-bright);
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.02em;
+  }
+
+  .section-title .accent { color: var(--gold); }
+
+  /* ── PROBLEMA ── */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5px;
+    margin-top: 3rem;
+    background: rgba(74,222,128,0.1);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .problem-item {
+    background: rgba(13,31,45,0.95);
+    padding: 2rem 1.75rem;
+    border: 1px solid rgba(74,222,128,0.08);
+  }
+
+  .problem-item .num {
+    font-family: var(--font-display);
+    font-size: 4rem;
+    color: rgba(74,222,128,0.15);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .problem-item h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .problem-item p {
+    font-size: 0.9rem;
+    color: var(--gray-soft);
+    line-height: 1.6;
+  }
+
+  /* ── QUÉ HAGO ── */
+  .what-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 768px) { .what-wrap { grid-template-columns: 1fr; gap: 2rem; } }
+
+  .what-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .orb {
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, rgba(34,197,94,0.25), rgba(13,31,45,0.8) 70%);
+    border: 1px solid rgba(74,222,128,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .orb svg {
+    width: 160px;
+    height: 160px;
+    opacity: 0.7;
+  }
+
+  .orb-ring {
+    position: absolute;
+    inset: -20px;
+    border-radius: 50%;
+    border: 1px solid rgba(74,222,128,0.08);
+  }
+
+  .orb-ring-2 {
+    position: absolute;
+    inset: -40px;
+    border-radius: 50%;
+    border: 1px solid rgba(74,222,128,0.04);
+  }
+
+  .steps-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--green-bright);
+    line-height: 1;
+    min-width: 32px;
+  }
+
+  .step-content h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    color: var(--white);
+  }
+
+  .step-content p {
+    font-size: 0.875rem;
+    color: var(--gray-soft);
+    line-height: 1.6;
+  }
+
+  /* ── PARA QUIÉN ── */
+  .for-who-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+
+  .for-card {
+    background: linear-gradient(135deg, rgba(22,101,52,0.15), rgba(13,31,45,0.9));
+    border: 1px solid rgba(74,222,128,0.15);
+    border-radius: 16px;
+    padding: 1.75rem 1.5rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .for-card:hover {
+    border-color: rgba(74,222,128,0.4);
+    transform: translateY(-4px);
+  }
+
+  .for-card .icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .for-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    color: var(--white);
+  }
+
+  .for-card p {
+    font-size: 0.85rem;
+    color: var(--gray-soft);
+    line-height: 1.5;
+  }
+
+  /* ── CÓMO FUNCIONA ── */
+  .how-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0;
+    margin-top: 3rem;
+    position: relative;
+  }
+
+  .how-step {
+    padding: 2rem 1.5rem;
+    position: relative;
+    text-align: center;
+  }
+
+  .how-step::after {
+    content: '→';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(74,222,128,0.3);
+    font-size: 1.5rem;
+  }
+
+  .how-step:last-child::after { display: none; }
+
+  .how-num {
+    font-family: var(--font-display);
+    font-size: 5rem;
+    line-height: 1;
+    color: rgba(74,222,128,0.12);
+    margin-bottom: -0.5rem;
+  }
+
+  .how-step h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .how-step p {
+    font-size: 0.82rem;
+    color: var(--gray-soft);
+    line-height: 1.5;
+  }
+
+  /* ── CTA FINAL ── */
+  .cta-section {
+    text-align: center;
+    position: relative;
+    padding: 6rem 1.5rem;
+    overflow: hidden;
+  }
+
+  .cta-section .bg-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(34,197,94,0.12), transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-section > * { position: relative; z-index: 1; }
+
+  .cta-section .big-title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 8vw, 7rem);
+    line-height: 0.95;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.02em;
+  }
+
+  .cta-section p {
+    color: var(--gray-soft);
+    max-width: 500px;
+    margin: 0 auto 3rem;
+    font-size: 1.05rem;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(74,222,128,0.08);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    color: var(--gray-soft);
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    .how-step::after { display: none; }
+    .hero-watermark { width: 90vw; right: -10%; bottom: -5%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <div class="hero-bg"></div>
+
+  <!-- Watermark SVG symbol -->
+  <svg class="hero-watermark" viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M100 10 C100 10 130 40 140 70 C155 110 145 130 130 145 C155 135 175 115 180 90 C185 65 170 35 150 20 Z" fill="white"/>
+    <path d="M100 10 C100 10 70 40 60 70 C45 110 55 130 70 145 C45 135 25 115 20 90 C15 65 30 35 50 20 Z" fill="white"/>
+    <circle cx="90" cy="115" r="8" fill="white"/>
+    <circle cx="110" cy="115" r="8" fill="white"/>
+    <path d="M100 150 C100 150 75 165 70 185 C80 175 90 168 100 165 C110 168 120 175 130 185 C125 165 100 150 100 150Z" fill="white"/>
+    <circle cx="55" cy="90" r="8" fill="white"/>
+    <circle cx="145" cy="90" r="8" fill="white"/>
+    <circle cx="65" cy="145" r="7" fill="white"/>
+    <circle cx="135" cy="145" r="7" fill="white"/>
+  </svg>
+
+  <div class="logo-wrap">
+    <svg class="logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M24 4 C24 4 32 12 34 20 C37 32 32 38 27 42 C34 38 40 30 41 22 C42 14 37 7 30 4 Z" fill="#4ade80"/>
+      <path d="M24 4 C24 4 16 12 14 20 C11 32 16 38 21 42 C14 38 8 30 7 22 C6 14 11 7 18 4 Z" fill="#4ade80"/>
+      <circle cx="21" cy="30" r="3" fill="#0d1f2d"/>
+      <circle cx="27" cy="30" r="3" fill="#0d1f2d"/>
+    </svg>
+    <div class="logo-text">
+      <div class="the">The</div>
+      <div class="creatures">CREATURES</div>
+      <div class="proyect">Proyect</div>
+    </div>
+  </div>
+
+  <div class="eyebrow">Comunidades que generan ingresos reales</div>
+
+  <h1 class="hero-headline">
+    TU EXPERIENCIA<br>
+    <span class="green">VALE</span> MÁS DE<br>
+    LO QUE <span class="gold">CREÉS</span>
+  </h1>
+
+  <p class="hero-sub">
+    Te ayudo a convertir lo que ya sabés en una comunidad paga en Skool. Sin improvisar, sin gastar de más, sin perder tiempo.
+  </p>
+
+  <div class="cta-group">
+    <a href="https://chat.whatsapp.com/PLACEHOLDER" class="btn-primary">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.549 4.104 1.508 5.83L.057 23.535a.5.5 0 0 0 .609.61l5.766-1.493A11.955 11.955 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.693-.524-5.22-1.435l-.374-.222-3.88 1.004 1.036-3.77-.244-.388A9.956 9.956 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+      Unirme al grupo de WhatsApp
+    </a>
+    <span class="cta-note">Acceso gratuito · Comunidad privada</span>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════ PROBLEMA ═══════ -->
+<section class="reveal">
+  <div class="section-label">El problema</div>
+  <h2 class="section-title">Tenés el conocimiento.<br>Te falta el <span class="accent">sistema</span>.</h2>
+
+  <div class="problem-grid">
+    <div class="problem-item">
+      <div class="num">01</div>
+      <h3>Publicás sin estrategia</h3>
+      <p>Subís contenido pero no tenés un embudo claro que convierta seguidores en ingresos.</p>
+    </div>
+    <div class="problem-item">
+      <div class="num">02</div>
+      <h3>No sabés por dónde empezar</h3>
+      <p>Comunidad, curso, membresía... hay demasiadas opciones y ninguna hoja de ruta.</p>
+    </div>
+    <div class="problem-item">
+      <div class="num">03</div>
+      <h3>Tu experiencia no tiene precio</h3>
+      <p>Años de conocimiento sin un modelo que los monetice de forma predecible y escalable.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ QUÉ HAGO ═══════ -->
+<section class="reveal">
+  <div class="section-label">La solución</div>
+  <h2 class="section-title">Construimos tu<br>comunidad <span class="accent">juntos</span>.</h2>
+
+  <div class="what-wrap">
+    <div class="what-visual">
+      <div class="orb">
+        <div class="orb-ring"></div>
+        <div class="orb-ring-2"></div>
+        <svg viewBox="0 0 160 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M80 15 C80 15 105 40 110 65 C118 100 108 120 95 135 C115 125 132 105 135 80 C138 55 125 30 108 15 Z" fill="#4ade80" opacity="0.6"/>
+          <path d="M80 15 C80 15 55 40 50 65 C42 100 52 120 65 135 C45 125 28 105 25 80 C22 55 35 30 52 15 Z" fill="#4ade80" opacity="0.6"/>
+          <circle cx="72" cy="110" r="9" fill="#e8c84a"/>
+          <circle cx="88" cy="110" r="9" fill="#e8c84a"/>
+          <circle cx="40" cy="75" r="7" fill="#4ade80" opacity="0.5"/>
+          <circle cx="120" cy="75" r="7" fill="#4ade80" opacity="0.5"/>
+          <circle cx="48" cy="130" r="6" fill="#4ade80" opacity="0.4"/>
+          <circle cx="112" cy="130" r="6" fill="#4ade80" opacity="0.4"/>
+        </svg>
+      </div>
+    </div>
+
+    <ul class="steps-list">
+      <li class="step">
+        <span class="step-num">01</span>
+        <div class="step-content">
+          <h4>Definimos tu propuesta de valor</h4>
+          <p>Identificamos qué sabés, a quién le sirve y cuánto vale. Sin rodeos.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-num">02</span>
+        <div class="step-content">
+          <h4>Estructuramos tu comunidad en Skool</h4>
+          <p>Configuramos la plataforma, los módulos, los precios y la experiencia del miembro.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-num">03</span>
+        <div class="step-content">
+          <h4>Creamos el embudo de contenido</h4>
+          <p>Diseñamos la estrategia de redes que convierte seguidores en miembros pagos.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step-num">04</span>
+        <div class="step-content">
+          <h4>Lanzamos y escalamos</h4>
+          <p>Te acompaño en el lanzamiento y en las primeras semanas de crecimiento.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════ PARA QUIÉN ═══════ -->
+<section class="reveal">
+  <div class="section-label">¿Esto es para vos?</div>
+  <h2 class="section-title">Para quienes ya<br>tienen <span class="accent">algo real</span>.</h2>
+
+  <div class="for-who-grid">
+    <div class="for-card">
+      <div class="icon">🎨</div>
+      <h3>Diseñadores y creativos</h3>
+      <p>Con años de oficio que quieren enseñar su proceso a otros y cobrar por eso.</p>
+    </div>
+    <div class="for-card">
+      <div class="icon">💼</div>
+      <h3>Profesionales independientes</h3>
+      <p>Consultores, coaches, especialistas que quieren escalar sin duplicar horas.</p>
+    </div>
+    <div class="for-card">
+      <div class="icon">🏪</div>
+      <h3>Emprendedores con trayectoria</h3>
+      <p>Dueños de negocio que quieren monetizar lo aprendido más allá de su propio rubro.</p>
+    </div>
+    <div class="for-card">
+      <div class="icon">📍</div>
+      <h3>Referentes locales</h3>
+      <p>Personas con reputación en San Juan y alrededores que quieren digitalizar su autoridad.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ CÓMO FUNCIONA ═══════ -->
+<section class="reveal">
+  <div class="section-label">El proceso</div>
+  <h2 class="section-title">De cero a comunidad<br><span class="accent">en 4 semanas</span>.</h2>
+
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="how-num">1</div>
+      <h4>Diagnóstico</h4>
+      <p>Sesión inicial para mapear tu conocimiento y tu audiencia potencial.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">2</div>
+      <h4>Diseño</h4>
+      <p>Estructura de la comunidad, contenidos, precios y nombre de marca.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">3</div>
+      <h4>Setup</h4>
+      <p>Configuración técnica completa en Skool. Vos enfocate en el contenido.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">4</div>
+      <h4>Lanzamiento</h4>
+      <p>Primeros miembros, primera facturación. Iteramos desde datos reales.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ CTA FINAL ═══════ -->
+<div class="cta-section reveal">
+  <div class="bg-glow"></div>
+  <div class="section-label">El primer paso</div>
+  <h2 class="big-title">EMPEZÁ<br><span style="color:var(--green-bright)">HOY</span></h2>
+  <p>Sumate al grupo de WhatsApp. Sin compromiso. Ahí vas a encontrar recursos, conversaciones reales y el camino para lanzar tu primera comunidad.</p>
+  <a href="https://chat.whatsapp.com/PLACEHOLDER" class="btn-primary">
+    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.549 4.104 1.508 5.83L.057 23.535a.5.5 0 0 0 .609.61l5.766-1.493A11.955 11.955 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.693-.524-5.22-1.435l-.374-.222-3.88 1.004 1.036-3.77-.244-.388A9.956 9.956 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+    Quiero unirme al grupo
+  </a>
+</div>
+
+<footer>
+  © 2025 The Creatures Proyect · Erik G. Riveros · San Juan, Argentina
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
